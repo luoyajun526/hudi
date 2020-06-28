@@ -16,34 +16,29 @@
  * limitations under the License.
  */
 
-package org.apache.hudi.index.bloom;
+package org.apache.hudi.io.storage;
 
-import java.util.List;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
 
-/**
- * Encapsulates the result from a key lookup.
- */
-public class KeyLookupResult {
+import org.apache.avro.Schema;
+import org.apache.avro.generic.IndexedRecord;
+import org.apache.hudi.common.bloom.BloomFilter;
 
-  private final String fileName;
-  private final List<String> matchingRecordKeys;
-  private final String partitionPath;
+public interface HoodieFileReader<R extends IndexedRecord> {
 
-  public KeyLookupResult(String fileName, String partitionPath, List<String> matchingRecordKeys) {
-    this.fileName = fileName;
-    this.partitionPath = partitionPath;
-    this.matchingRecordKeys = matchingRecordKeys;
-  }
+  public String[] readMinMaxRecordKeys();
 
-  public String getFileName() {
-    return fileName;
-  }
+  public BloomFilter readBloomFilter();
 
-  public List<String> getMatchingRecordKeys() {
-    return matchingRecordKeys;
-  }
+  public Set<String> filterRowKeys(Set<String> candidateRowKeys);
 
-  public String getPartitionPath() {
-    return partitionPath;
-  }
+  public Iterator<R> getRecordIterator(Schema schema) throws IOException;
+
+  Schema getSchema();
+
+  void close();
+
+  long getTotalRecords();
 }

@@ -16,21 +16,15 @@
  * limitations under the License.
  */
 
-package org.apache.hudi.io.storage;
+package org.apache.hudi.common.functional;
 
-import org.apache.hudi.common.model.HoodieRecord;
+import org.apache.hudi.common.table.log.block.HoodieLogBlock.HoodieLogBlockType;
 
-import org.apache.avro.generic.IndexedRecord;
-
-import java.io.IOException;
-
-public interface HoodieStorageWriter<R extends IndexedRecord> {
-
-  void writeAvroWithMetadata(R newRecord, HoodieRecord record) throws IOException;
-
-  boolean canWrite();
-
-  void close() throws IOException;
-
-  void writeAvro(String key, R oldRecord) throws IOException;
+/**
+ * Tests Avro log format {@link HoodieAvroDataBlock}.
+ */
+public class TestHoodieAvroLogFormat extends TestHoodieLogFormat {
+  public TestHoodieAvroLogFormat() {
+    super(HoodieLogBlockType.AVRO_DATA_BLOCK);
+  }
 }
